@@ -1,18 +1,332 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
+            print()
+            print("Request returned to Under Review.")
+            print("Please use Verify Requirements")
+            print("to complete the verification.")
 
-# Other files and folders
-.settings/
+        elif choice == "2":
+            print()
+            notes = input("Enter the remaining missing requirements: ")
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+            while notes.strip() == "":
+                print("Please provide the missing requirements.")
+                notes = input("Enter the remaining missing requirements: ")
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+            request[8] = "Action Required"
+            request[9] = notes
+
+            print("Request remains Action Required.")
+            print("Updated Instructions:", request[9])
+
+        elif choice == "3":
+            print("Review cancelled. No changes were made.")
+
+    else:
+        print()
+        print("Only requests marked Action Required")
+        print("can be resumed.")
+
+    print("------------------------------")
+
+def staff_login():
+    print()
+    print("      ✦ STAFF LOGIN ✦")
+    print("------------------------------")
+
+    username = input("Username: ")
+    password = input("Password: ")
+
+    while username == "" or password == "":
+        print("Username and password cannot be empty.")
+        print()
+        username = input("Username: ")
+        password = input("Password: ")
+
+    if username == "admin" and password == "123":
+        print()
+        print("Login successful.")
+        return True
+
+    else:
+        print()
+        print("Invalid username or password.")
+        return False
+
+def create_account():
+    print()
+    print("     ✦ CREATE ACCOUNT ✦")
+    print("------------------------------")
+
+    name = input("Enter your full name (or B to go back): ")
+
+    while name.strip() == "":
+        print("Please enter your full name.")
+        name = input("Enter your full name (or B to go back): ")
+
+        if name == "B" or name == "b":
+            return
+
+    if name == "B" or name == "b":
+        return
+
+    username = input("Create a username (or B to go back): ")
+
+    while username.strip() == "":
+        print("Please enter a username.")
+        username = input("Create a username (or B to go back): ")
+
+        if username == "B" or username == "b":
+            return
+
+    if username == "B" or username == "b":
+        return
+
+    for account in resident_accounts:
+        if account[0] == username:
+            print("That username is already taken.")
+            return
+
+    password = input("Create a password (or B to go back): ")
+
+    if password == "B" or password == "b":
+        return
+
+    while password.strip() == "":
+        print("Please enter a password.")
+        password = input("Create a password (or B to go back): ")
+
+        if password == "B" or password == "b":
+            return
+
+    account = [username, password, name]
+    resident_accounts.append(account)
+
+    print()
+    print("Your account has been created successfully.")
+    print("You can now log in using your username and password.")
+    print("------------------------------")
+
+def resident_login():
+    print()
+    print("     ✦ RESIDENT LOGIN ✦")
+    print("------------------------------")
+
+    while True:
+        username = input("Enter your username (or B to go back): ")
+
+        if username == "B" or username == "b":
+            return ""
+
+        if username == "":
+            print("Please enter your username to continue.")
+        else:
+            break
+
+    while True:
+        password = input("Enter your password: ")
+
+        if password == "":
+            print("Please enter your password to continue.")
+        else:
+            break
+
+    for account in resident_accounts:
+        if account[0] == username:
+            if account[1] == password:
+                print()
+                print("Login successful! Welcome,", account[2])
+                return username
+
+def resident_login():
+    print()
+    print("     ✦ RESIDENT LOGIN ✦")
+    print("------------------------------")
+
+    while True:
+        username = input("Enter your username (or B to go back): ")
+
+        if username == "B" or username == "b":
+            return ""
+
+        if username == "":
+            print("Please enter your username to continue.")
+        else:
+            break
+
+    while True:
+        password = input("Enter your password: ")
+
+        if password == "":
+            print("Please enter your password to continue.")
+        else:
+            break
+
+    for account in resident_accounts:
+        if account[0] == username:
+            if account[1] == password:
+                print()
+                print("Login successful! Welcome,", account[2])
+                return username
+
+    print()
+    print("Login failed. Invalid username or password.")
+    return ""
+
+def my_requests(username):
+    print()
+    print("                      ✦ MY REQUESTS ✦")
+    print("============================================================")
+
+    total_requests = 0
+
+    for request in requests:
+        if request[1] == username:
+            total_requests += 1
+
+            print()
+            print("REQUEST", total_requests)
+            print("------------------------------------------------------------")
+            print("Reference Number  :", request[0])
+            print("Document Requested:", request[4])
+            print("Property Owner    :", request[3])
+            print("Request Status    :", request[8])
+            print("------------------------------------------------------------")
+
+    if total_requests == 0:
+        print()
+        print("You have no document requests yet.")
+
+    print()
+    print("============================================================")
+    print("Total Requests:", total_requests)
+    print("============================================================")
+
+    if total_requests > 0:
+        print()
+        print("To view more details, select Track Request Status.")
+
+def resident_dashboard(username, request_number):
+    while True:
+        print()
+        print("        ✦ RESIDENT DASHBOARD ✦")
+        print("--------------------------------------")
+        print("[1] - Submit Document Request")
+        print("[2] - My Requests and Appointments")
+        print("[3] - View Available Documents")
+        print("[4] - Book an Appointment")
+        print("[5] - Cancel Appointment")
+        print("[6] - Log Out")
+        print("--------------------------------------")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            request_number = record_request(request_number, username)
+
+        elif choice == "2":
+            my_requests_and_appointments(username)
+
+        elif choice == "3":
+            show_available_documents()
+
+        elif choice == "4":
+            book_appointment(username)
+
+        elif choice == "5":
+            cancel_appointment(username)
+
+        elif choice == "6":
+            print("You have logged out.")
+            return request_number
+
+        else:
+            print("Please enter a valid choice.")
+
+def resident_menu(request_number):
+    while True:
+        print()
+        print("     ✦ RESIDENT PORTAL ✦")
+        print("------------------------------")
+        print("[1] - Log In")
+        print("[2] - Create Account")
+        print("[3] - Back")
+        print("------------------------------")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            username = resident_login()
+
+            if username == "":
+                pass
+            else:
+                request_number = resident_dashboard(username, request_number)
+
+        elif choice == "2":
+            create_account()
+
+        elif choice == "3":
+            return request_number
+
+        else:
+            print("Please enter a valid choice.")
+        
+def staff_menu(request_number):
+    while True:
+        print()
+        print("       ✦ STAFF MENU ✦")
+        print("------------------------------")
+        print("[1] - Request Monitoring")
+        print("[2] - Verify Requirements")
+        print("[3] - Resume Request Review")
+        print("[4] - Update Request Status")
+        print("[5] - Logout")
+        print("------------------------------")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            request_monitoring()
+
+        elif choice == "2":
+            verify_requirements()
+
+        elif choice == "3":
+            resume_review()
+
+        elif choice == "4":
+            update_status()
+
+        elif choice == "5":
+            return request_number
+
+        else:
+            print("Please enter a valid choice.")
+
+def main_menu(request_number):
+    while True:
+        print()
+        print("✦ MUNICIPAL ASSESSOR'S OFFICE ✦")
+        print("--------------------------------")
+        print("[1] - Resident")
+        print("[2] - Staff")
+        print("[3] - Exit")
+        print("--------------------------------")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            request_number = resident_menu(request_number)
+
+        elif choice == "2":
+            if staff_login():
+                request_number = staff_menu(request_number)
+
+        elif choice == "3":
+            print()
+            print("Thank you for using the system.")
+            break
+
+        else:
+            print("Please enter a valid choice.")
+
+main_menu(request_number
